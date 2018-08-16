@@ -1,0 +1,23 @@
+package {{ .Package }}
+
+import "context"
+{{ $services := .Services }}{{range  $service := $services}}{{if $service.Name }}{{ $methods := .Methods }}
+{{range $method := $methods }}type {{ $method|getProtoName }}EndpointFunc func(ctx context.Context, req *{{ $method|getProtoInputType }}) (*{{ $method|getProtoOutputType }}, error){{end}}
+
+type {{ $service.Name }}Endpoints struct {
+    {{range $method := $methods }}{{ $method|getProtoName }}Endpoint {{ $method|getProtoName }}EndpointFunc{{end}}
+}
+
+type {{ $service.Name }}EndpointsWrapper struct {
+    {{range $method := $methods }}{{ $method|getProtoNameToLower }} {{ $method|getProtoName }}EndpointFunc{{end}}
+}
+
+func New{{ $service.Name }}EndpointsWrapper(e {{ $service.Name }}Endpoints) *{{ $service.Name }}EndpointsWrapper {
+    return &{{ $service.Name }}EndpointsWrapper {
+        {{range $method := $methods }}{{ $method|getProtoNameToLower }}: e.{{ $method|getProtoName }}Endpoint,{{end}}
+    }
+}
+
+{{range $method := $methods }}func (w {{ $service.Name }}EndpointsWrapper) {{ $method|getProtoName }}(ctx context.Context, req *{{ $method|getProtoInputType }}) (*{{ $method|getProtoOutputType }}, error) {
+    return w.{{ $method|getProtoNameToLower }}(ctx, req)
+}{{end}}{{end}}{{end}}

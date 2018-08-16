@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package proto;
+
+enum Language {
+    en = 0;
+    fr = 1;
+}
+
+message TranslateRequest {
+    string text = 1;
+    Language language = 2;
+}
+
+message TranslateResponse {
+    string text = 1;
+}
+
+service Translator {
+    rpc Translate(TranslateRequest) returns (TranslateResponse) {}
+}
