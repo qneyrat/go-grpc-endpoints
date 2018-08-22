@@ -1,32 +1,31 @@
 # go-grpc-endpoints
-protoc plugin to auto-generate endpoints layer
 
-Helpfull plugin to use composition on gRPC server.
+Helpfull protoc plugin to use composition on gRPC server.
 
 ## Installing and using
 
-Install with `go get`
+Install with `go get`:
 ```
 > $ go get github.com/qneyrat/go-grpc-endpoints/protoc-gen-goendpoints
 > $ go install github.com/qneyrat/go-grpc-endpoints/protoc-gen-goendpoints
 ```
 
-Add `--goendpoints_out=` flag to generage endpoints layer with protoc
+Add `--goendpoints_out=` flag to generage endpoints layer with protoc:
 ```
 > $ protoc -I . ./translator.proto --go_out=plugins=grpc:. --goendpoints_out=.:.   
 ```
 
 ## Plugin and endpoints layer usage
 
-Plugin auto-generate strucs and func for endpoints layer from your proto files
+Plugin auto-generate strucs and func for endpoints layer from your proto files.
 
 EndpointsWrapper is gRPC server. It's implement gRPC server interface and call endpoints
 
-Endpoints struct is endpoints group to create EndpointsWrapper
+Endpoints struct is endpoints group to create EndpointsWrapper.
 
 You can just write EndpointFunc constructor to hydrate Endpoints struct:
 
-> Create EndpointFunc constructor
+- create EndpointFunc constructor:
 ```go 
 func NewTranslateEndpoint(t translate.Translator) TranslateEndpointFunc {
   return func(ctx context.Context, req *proto.TranslateRequest) (*proto.TranslateResponse, error) {
@@ -35,7 +34,7 @@ func NewTranslateEndpoint(t translate.Translator) TranslateEndpointFunc {
 }
 ```
 
-> Register EndpointsWrapper on gRPC server
+- register EndpointsWrapper on gRPC server:
 ```go
 	translator := translate.NewGoogleTranslator()
 	wrapper := NewTranslatorEndpointsWrapper(TranslatorEndpoints{
