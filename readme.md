@@ -22,7 +22,7 @@ Plugin auto-generate strucs and func for endpoints layer from your proto files
 
 EndpointsWrapper is gRPC server. It's implement gRPC server interface and call endpoints
 
-Endpoints struct is endpoints group to crate EndpointsWrapper
+Endpoints struct is endpoints group to create EndpointsWrapper
 
 You can just write EndpointFunc constructor to hydrate Endpoints struct:
 
