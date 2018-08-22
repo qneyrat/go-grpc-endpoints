@@ -1,6 +1,6 @@
 # go-grpc-endpoints
 
-Helpfull protoc plugin to use composition on gRPC server.
+Protoc plugin to use composition on gRPC server.
 
 ## Installing and using
 
