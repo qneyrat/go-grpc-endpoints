@@ -8,6 +8,7 @@ import (
 	"github.com/golang/protobuf/proto"
 	internaltmpl "github.com/qneyrat/go-grpc-endpoints/internal/tmpl"
 	"github.com/qneyrat/go-grpc-endpoints/protoc-gen-goendpoints/tmpl"
+	"go/format"
 )
 
 type generator struct {
@@ -41,7 +42,7 @@ func (g *generator) Make(protoFile *googleproto.FileDescriptorProto) (*plugin.Co
 		})
 	}
 
-	b, err := tmpl.TmplEndpointsPbGoTmplBytes()
+	b, err := tmpl.Asset("endpoints.pb.go.tmpl")
 	if err != nil {
 		return &plugin.CodeGeneratorResponse_File{}, err
 	}
@@ -58,9 +59,14 @@ func (g *generator) Make(protoFile *googleproto.FileDescriptorProto) (*plugin.Co
 
 	g.P(buf.String())
 
+	formatted, err := format.Source(g.Bytes())
+	if err != nil {
+		return &plugin.CodeGeneratorResponse_File{}, err
+	}
+
 	file := &plugin.CodeGeneratorResponse_File{
 		Name:    proto.String(g.ProtoFileBaseName(*protoFile.Name) + ".endpoints.pb.go"),
-		Content: proto.String(g.String()),
+		Content: proto.String(string(formatted)),
 	}
 	return file, nil
 }
