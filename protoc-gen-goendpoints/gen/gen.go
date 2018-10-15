@@ -1,11 +1,11 @@
 package gen
 
 import (
-	internalgen "github.com/qneyrat/go-grpc-endpoints/internal/gen"
-	googleproto "github.com/golang/protobuf/protoc-gen-go/descriptor"
-	plugin "github.com/golang/protobuf/protoc-gen-go/plugin"
-	gen "github.com/golang/protobuf/protoc-gen-go/generator"
 	"github.com/golang/protobuf/proto"
+	googleproto "github.com/golang/protobuf/protoc-gen-go/descriptor"
+	gen "github.com/golang/protobuf/protoc-gen-go/generator"
+	plugin "github.com/golang/protobuf/protoc-gen-go/plugin"
+	internalgen "github.com/qneyrat/go-grpc-endpoints/internal/gen"
 	internaltmpl "github.com/qneyrat/go-grpc-endpoints/internal/tmpl"
 	"github.com/qneyrat/go-grpc-endpoints/protoc-gen-goendpoints/tmpl"
 	"go/format"
