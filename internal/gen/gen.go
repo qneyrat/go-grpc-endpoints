@@ -1,12 +1,12 @@
 package gen
 
 import (
-	"os"
-	"strings"
-	"log"
-	"path"
-	"io/ioutil"
 	"io"
+	"io/ioutil"
+	"log"
+	"os"
+	"path"
+	"strings"
 
 	"github.com/golang/protobuf/proto"
 	googleproto "github.com/golang/protobuf/protoc-gen-go/descriptor"
@@ -56,6 +56,9 @@ func (g *Generator) ProtoFileBaseName(name string) string {
 func (g *Generator) generate(maker Maker, request *plugin.CodeGeneratorRequest) (*plugin.CodeGeneratorResponse, error) {
 	response := new(plugin.CodeGeneratorResponse)
 	for _, protoFile := range request.ProtoFile {
+		if len(protoFile.GetService()) <= 0 {
+			continue
+		}
 		file, err := maker.Make(protoFile)
 		if err != nil {
 			return response, err
