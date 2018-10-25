@@ -59,7 +59,7 @@ type Server struct{
   // ...
 }
 
-func (s *Service) Method(ctx context.Context, req *proto.Req) (*proto.Res, error) {
+func (s *Server) Method(ctx context.Context, req *proto.Req) (*proto.Res, error) {
   // use services here like s.service1.Foo()
 }
 ```
@@ -79,7 +79,7 @@ type Server struct{
   // ...
 }
 
-func (s *Service) Method(ctx context.Context, req *proto.Req) (*proto.Res, error) {
+func (s *Server) Method(ctx context.Context, req *proto.Req) (*proto.Res, error) {
   return s.endpoint1(ctx, req)
 }
 ```
