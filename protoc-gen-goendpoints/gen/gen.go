@@ -1,6 +1,7 @@
 package gen
 
 import (
+	"fmt"
 	"github.com/golang/protobuf/proto"
 	googleproto "github.com/golang/protobuf/protoc-gen-go/descriptor"
 	gen "github.com/golang/protobuf/protoc-gen-go/generator"
@@ -44,16 +45,19 @@ func (g *generator) Make(protoFile *googleproto.FileDescriptorProto) (*plugin.Co
 
 	b, err := tmpl.Asset("endpoints.pb.go.tmpl")
 	if err != nil {
+		fmt.Println(err)
 		return &plugin.CodeGeneratorResponse_File{}, err
 	}
 
 	t, err := internaltmpl.NewTempale(b)
 	if err != nil {
+		fmt.Println(err)
 		return &plugin.CodeGeneratorResponse_File{}, err
 	}
 
 	buf, err := t.Eval(data)
 	if err != nil {
+		fmt.Println(err)
 		return &plugin.CodeGeneratorResponse_File{}, err
 	}
 
@@ -61,6 +65,7 @@ func (g *generator) Make(protoFile *googleproto.FileDescriptorProto) (*plugin.Co
 
 	formatted, err := format.Source(g.Bytes())
 	if err != nil {
+		fmt.Println(err)
 		return &plugin.CodeGeneratorResponse_File{}, err
 	}
 
