@@ -1,8 +1,13 @@
-package {{ .Package }}
+{{$package := .Package }}
+package {{ $package }}
 
 import "context"
-{{ $services := .Services }}{{range  $service := $services}}{{if $service.Name }}{{ $methods := .Methods }}
-{{range $method := $methods }}type {{ $method|getProtoName }}EndpointFunc func(ctx context.Context, req *{{ $method|getProtoInputType }}) (*{{ $method|getProtoOutputType }}, error)
+{{ $services := .Services }}{{range  $service := $services}}
+{{if $service.Name }}{{ $methods := .Methods }}{{range $method := $methods }}{{ if $method.ServerStreaming }}
+type {{ $method|getProtoName }}EndpointFunc func(req *{{ $method|getProtoInputType }}, stream {{ $package|camelCase }}_{{ $method|getProtoName }}Server) error
+{{ else }}
+type {{ $method|getProtoName }}EndpointFunc func(ctx context.Context, req *{{ $method|getProtoInputType }}) (*{{ $method|getProtoOutputType }}, error)
+{{ end }}
 {{end}}
 
 type {{ $service.Name }}Endpoints struct {
@@ -22,7 +27,14 @@ func New{{ $service.Name }}EndpointsWrapper(e {{ $service.Name }}Endpoints) *{{ 
     }
 }
 
-{{range $method := $methods }}func (w {{ $service.Name }}EndpointsWrapper) {{ $method|getProtoName }}(ctx context.Context, req *{{ $method|getProtoInputType }}) (*{{ $method|getProtoOutputType }}, error) {
+{{range $method := $methods }}
+{{ if $method.ServerStreaming }}
+func (w {{ $service.Name }}EndpointsWrapper) {{ $method|getProtoName }}(req *{{ $method|getProtoInputType }}, stream {{ $package|camelCase }}_{{ $method|getProtoName }}Server) error {
+    return w.{{ $method|getProtoNameToLower }}(req, stream)
+}
+{{ else }}
+func (w {{ $service.Name }}EndpointsWrapper) {{ $method|getProtoName }}(ctx context.Context, req *{{ $method|getProtoInputType }}) (*{{ $method|getProtoOutputType }}, error) {
     return w.{{ $method|getProtoNameToLower }}(ctx, req)
 }
+{{ end }}
 {{end}}{{end}}{{end}}

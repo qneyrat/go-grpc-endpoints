@@ -36,7 +36,10 @@ func getFuncs() template.FuncMap {
 func NewTempale(buf []byte) (*Template, error) {
 	t := template.New("template")
 	t.Funcs(getFuncs())
-	t.Parse(string(buf))
+	_, err := t.Parse(string(buf))
+	if err != nil {
+		return &Template{}, err
+	}
 	return &Template{ t }, nil
 }
 
